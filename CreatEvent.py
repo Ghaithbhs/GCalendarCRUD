@@ -22,6 +22,7 @@ def main():
     y = input()
     print('attendees : ')
     a = input()
+    l = "FOCUS-1ere-Midoune Meeting Room (10)"
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -49,21 +50,24 @@ def main():
     #Add an event
     event = {
         'summary': n,
-        'location': '800 Howard St., San Francisco, CA 94103',
+        'location': 'Focus',
+        #'resource': 'focus-corporation.com_3436373433373035363932@resource.calendar.google.com',
         'description': 'A chance to hear more about Google\'s developer products.',
         'start': {
-            'dateTime': y+'-'+m+'-'+d+'T9:00:00-07:00',
+            'dateTime': y+'-'+m+'-'+d+'T9:00:00-01:00',
             'timeZone': 'America/Los_Angeles',
         },
         'end': {
-            'dateTime': y+'-'+m+'-'+d+'T17:00:00-07:00',
+            'dateTime': y+'-'+m+'-'+d+'T17:00:00-01:00',
             'timeZone': 'America/Los_Angeles',
         },
         'recurrence': [
             'RRULE:FREQ=DAILY;COUNT=2'
         ],
         'attendees': [
-            {'email': a},
+            {'email': a,
+             'email': 'focus-corporation.com_3436373433373035363932@resource.calendar.google.com'
+             },
         ],
         'reminders': {
             'useDefault': False,
