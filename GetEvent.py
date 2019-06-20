@@ -7,14 +7,15 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId']
+SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+
 
 def main():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
-    #print("What's the name of the event you want t delete?")
-    n = 'NGh0Z3BtbTFobWFrNzQ0cjBrYmtkY29kYXIgZXVndTlrYW4xZGRpMXBtaTZzazNpYjWoNmdAZw'
+    print("What's the name of the event?")
+    s = input()
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -36,25 +37,17 @@ def main():
 
     service = build('calendar', 'v3', credentials=creds)
 
-    creds = get_credentials()
-    http = creds.authorize(httplib2.Http())
-    calendar_service = discovery.build('calendar', 'v3', http=http)
-    event = calendar_service.events().insert(calendarId='primary',
-                                             body=event).execute()
-    eventId = event.get('id')
-    # Get event by name
-    ''' Event{eid=k5r2meajcb92kgbf3olu74hs4g_20190619T160000Z*, 
-    organizer=ghaithbhs095@gmail.com, 
-    participant=ghaithbhs095@gmail.com, 
-    actor=ghaithbhs095@gmail.com, 
-    summary=testing notification, 
-    status=CONFIRMED, seq=0, 
-    startTime=2019-06-19T17:00:00Z, 
-    endTime=2019-06-20T01:00:00Z, 
-    firstStart=20190618T170000, 
-    rdata=RRULE:FREQ=DAILY;COUNT=2}
-    event = service.events().get(calendarId='primary', eventId=eventId).execute()
-    print(event['summary'])'''
+    # Call the Calendar API
+    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+    print('Getting the upcoming 10 events')
+    events_result = service.events().get(calendarId='primary', eventId=s).execute()
+    events = events_result.get('items', [])
+
+    if not events:
+        print('No upcoming events found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        print(start, event['summary'])
 
 
 if __name__ == '__main__':

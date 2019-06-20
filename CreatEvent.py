@@ -22,6 +22,35 @@ def main():
     y = input()
     print('attendees : ')
     a = input()
+    print('Meeting Room : ')
+    r = input()
+    maxattendees = 10
+    if r == "Midoun meeting room":
+        room = "focus-corporation.com_3436373433373035363932@resource.calendar.google.com"
+    elif r == "Aiguilles Meeting Room":
+        room = "focus-corporation.com_3132323634363237333835@resource.calendar.google.com"
+    elif r == "Barrouta Meeting Room":
+        room = "focus-corporation.com_3335353934333838383834@resource.calendar.google.com"
+    elif r == "Kantaoui Meeting Room":
+        room = "focus-corporation.com_3335343331353831343533@resource.calendar.google.com"
+    elif r == "Gorges Meeting Room":
+        room = "focus-corporation.com_3436383331343336343130@resource.calendar.google.com"
+    elif r == "Ichkeul Meeting Room":
+        room = "focus-corporation.com_36323631393136363531@resource.calendar.google.com"
+    elif r == "Khemir Meeting Room":
+        room = "focus-corporation.com_3935343631343936373336@resource.calendar.google.com"
+    elif r == "Tamaghza Meeting Room":
+        room = "focus-corporation.com_3739333735323735393039@resource.calendar.google.com"
+    elif r == "Friguia Meeting Room":
+        room = "focus-corporation.com_3132343934363632383933@resource.calendar.google.com"
+        maxattendees = 15
+    elif r == "Ksour Meeting Room":
+        room = "focus-corporation.com_@resource.calendar.google.com"
+    elif r == "Medeina Meeting Room":
+        room = "focus-corporation.com_@resource.calendar.google.com"
+    elif r == "Thyna Meeting Room":
+        room = "focus-corporation.com_@resource.calendar.google.com"
+
     l = "FOCUS-1ere-Midoune Meeting Room (10)"
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
@@ -50,7 +79,7 @@ def main():
     #Add an event
     event = {
         'summary': n,
-        'location': 'Focus',
+        'location': room,
         #'resource': 'focus-corporation.com_3436373433373035363932@resource.calendar.google.com',
         'description': 'A chance to hear more about Google\'s developer products.',
         'start': {
@@ -66,7 +95,7 @@ def main():
         ],
         'attendees': [
             {'email': a,
-             'email': 'focus-corporation.com_3436373433373035363932@resource.calendar.google.com'
+             'email': room
              },
         ],
         'reminders': {
