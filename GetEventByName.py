@@ -91,6 +91,7 @@ def main():
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         print(start, event['summary'], event['location'])
+        print(event['id'])
 
 
 if __name__ == '__main__':
