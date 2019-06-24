@@ -7,7 +7,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['hhttps://www.googleapis.com/calendar/v3/calendars/calendarId/events']
 
 def main():
 
@@ -81,10 +81,16 @@ def main():
         'summary': n,
     }
 
-    events_result = service.events().list(calendarId='primary', timeMin=now,
+    events_result = service.events().list(calendarId='primary',
                                           maxResults=1, singleEvents=True,
-                                          orderBy='startTime', query='name', body=event).execute()
+                                          orderBy='startTime', q=n).execute()
     events = events_result.get('items', [])
+
+    if not events:
+        print('event not found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        print(start, event['summary'], event['location'])
 
 
 if __name__ == '__main__':
