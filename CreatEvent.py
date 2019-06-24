@@ -79,7 +79,7 @@ def main():
     #Add an event
     event = {
         'summary': n,
-        'location': room,
+        'location': r,
         #'resource': 'focus-corporation.com_3436373433373035363932@resource.calendar.google.com',
         'description': 'A chance to hear more about Google\'s developer products.',
         'start': {

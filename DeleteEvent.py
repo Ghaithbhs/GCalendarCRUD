@@ -10,10 +10,9 @@ from google.auth.transport.requests import Request
 SCOPES = ['https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId']
 
 def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
-    print("What's the name of the event you want t delete?")
+
+    # Get inputs
+    print("What's the name of the event?")
     n = input()
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -36,19 +35,22 @@ def main():
 
     service = build('calendar', 'v3', credentials=creds)
 
-    # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=10, singleEvents=True,
-                                        orderBy='startTime').execute()
+    # Query
+    events_result = service.events().list(calendarId='primary',
+                                          maxResults=10, singleEvents=True,
+                                          orderBy='startTime', q=n).execute()
     events = events_result.get('items', [])
 
     if not events:
-        print('No upcoming events found.')
+        print('event not found.')
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
+        print(start, event['summary'], event['location'])
+        eventid = event['id']
+        print(event['id'])
+        print(eventid)
+
+    service.events().delete(calendarId='primary', eventId=eventid).execute()
 
 
 if __name__ == '__main__':
