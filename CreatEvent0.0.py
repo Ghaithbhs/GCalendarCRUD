@@ -1,5 +1,4 @@
 from __future__ import print_function
-import datetime
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -21,12 +20,15 @@ def main():
     m = input()
     print('year : ')
     y = input()
+    print(' Attendee N1 : ')
+    a1 = input()
+    print(' Attendee N2 :  ')
+    a2 = input()
     print('Meeting Room : ')
     r = input()
     maxattendees = 10
     if r == "Midoun meeting room":
         room = "focus-corporation.com_3436373433373035363932@resource.calendar.google.com"
-        mr = {'email': room}
     elif r == "Aiguilles Meeting Room":
         room = "focus-corporation.com_3132323634363237333835@resource.calendar.google.com"
     elif r == "Barrouta Meeting Room":
@@ -50,47 +52,8 @@ def main():
         room = "focus-corporation.com_@resource.calendar.google.com"
     elif r == "Thyna Meeting Room":
         room = "focus-corporation.com_@resource.calendar.google.com"
-    i = 1
-    attendees = ['blabla@blabla'] * maxattendees
-    # first attendee
-    print('attendees :')
-    a = input()
-    if a != '':
-        attendees[0] = a
-    else:
-        print('no attendees added')
-    # other attendees to add less then max
-    while i != maxattendees:
-        a = input()
-        if a == '':
-            break
-        else:
-            attendees[i] = a
-            i = i + 1
-    # until this stage we have a list of attendees + blanks filled with blabla@blabla.om
-    #print(attendees)
-    l = len(attendees)
-    #print(l)
-    # in this part we are going to get the attendees without the blanks
-    t = 0
-    att = []
-    while t != l:
-        if attendees[t] != 'blabla@blabla':
-            att.append(attendees[t])
-            t = t + 1
-        else:
-            t = t + 1
-    l2 = len(att)
-    #print(att)
-    #print(l2)
 
-    attendee = []
-    for r in range(l2):
-        email = {'email': att[r]}
-        attendee.append(email)
-    attendee.append(mr)
-    #print(attendee)
-    #l = "FOCUS-1ere-Midoune Meeting Room (10)"
+    l = "FOCUS-1ere-Midoune Meeting Room (10)"
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -132,7 +95,10 @@ def main():
         'recurrence': [
             'RRULE:FREQ=DAILY;COUNT=2'
         ],
-        'attendees': attendee,
+        'attendees': [
+            {'email': a1,
+             },
+        ],
         'reminders': {
             'useDefault': False,
             'overrides': [
@@ -141,9 +107,7 @@ def main():
             ],
         },
     }
-    '''s = 0
-    for s in range(l2):
-        query = {**event, **attendee[s]}'''
+    print(event)
     event = service.events().insert(calendarId='primary', sendNotifications=True, body=event).execute()
     print
     'Event created: %s' % (event.get('htmlLink'))
