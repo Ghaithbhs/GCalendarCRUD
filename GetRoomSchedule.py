@@ -12,7 +12,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.readonly' +
 
 
 def main():
-    #Get Cridentials
+    # Get Credentials
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -76,15 +76,19 @@ def main():
     }'''
     #now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     print('Getting the schedule of the meeting room')
-    resources_result = Resources.calendars().list(calendarId='primary', resourceName=r).execute()
-    resources = resources_result.get('items', [])
+    events_result = service.events().list(calendarId='focus-corporation.com_3436373433373035363932',
+                                          maxResults=1, singleEvents=True,
+                                          orderBy='startTime').execute()
+    events = events_result.get('items', [])
 
-    if not resources:
-        print('resource not found.')
-    for resource in resources:
-        #start = resource['start'].get('dateTime', resource['start'].get('date'))
-        rid = resource['id']
-        print(rid)
+    if not events:
+        print('event not found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        print(start, event['summary'], event['location'])
+        eventid = event['id']
+        print(event['id'])
+        print(eventid)
 
 
 if __name__ == '__main__':

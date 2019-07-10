@@ -1,6 +1,5 @@
 from __future__ import print_function
 import httplib2
-
 from apiclient.discovery import build
 from oauth2client.file import Storage
 from oauth2client.client import OAuth2WebServerFlow
@@ -27,8 +26,8 @@ FLOW = OAuth2WebServerFlow(
 # file.
 storage = Storage('info.dat')
 credentials = storage.get()
-if credentials is None or credentials.invalid == True:
-  credentials = tools.run_flow(FLOW, storage)
+if credentials is None or credentials.invalid is True:
+    credentials = tools.run_flow(FLOW, storage)
 
 # Create an httplib2.Http object to handle our HTTP requests and
 # authorize it with our good Credentials.
