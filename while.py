@@ -32,7 +32,6 @@ i = 1
 max = 10
 f = 0
 found = False
-found = False
 attendees = ['blabla@blabla'] * max
 atto = []
 noms = []

@@ -14,10 +14,6 @@ from oauth2client import tools
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-
-# Go to the Google API Console, open your application's
-# credentials page, and copy the client ID and client secret.
-# Then paste them into the following code.
 FLOW = OAuth2WebServerFlow(
     client_id='361001423406-meqq5djv2vf54fhd0ect7163ugkpssmm.apps.googleusercontent.com',
     client_secret='pioORdrpsd-cFemxkETi08yM',
@@ -27,7 +23,24 @@ FLOW = OAuth2WebServerFlow(
 
 def main():
 
-    # CREDENTIALS FOR GOOGLE CALENDAR API
+    # Getting the credentials for G.People API
+    storage = Storage('info.dat')
+    credentials = storage.get()
+    if credentials is None or credentials.invalid is True:
+        credentials = tools.run_flow(FLOW, storage)
+
+    http = httplib2.Http()
+    http = credentials.authorize(http)
+
+    people_service = build(serviceName='people', version='v1', http=http)
+
+    results = people_service.people().connections().list(
+        resourceName='people/me',
+        pageSize=10,
+        personFields='emailAddresses,names').execute()
+    connections = results.get('connections', [])
+
+    # Getting the credentials for G.Calendar API
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -48,31 +61,6 @@ def main():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-
-    # CREDENTIALS FOR GOOGLE PEOPLE API
-    # If the Credentials don't exist or are invalid, run through the
-    # installed application flow. The Storage object will ensure that,
-    # if successful, the good Credentials will get written back to a
-    # file.
-    storage = Storage('info.dat')
-    credentials = storage.get()
-    if credentials is None or credentials.invalid is True:
-        credentials = tools.run_flow(FLOW, storage)
-
-    # Create an httplib2.Http object to handle our HTTP requests and
-    # authorize it with our good Credentials.
-    http = httplib2.Http()
-    http = credentials.authorize(http)
-
-    # Build a service object for interacting with the API. To get an API key for
-    # your application, visit the Google API Console
-    # and look at your application's credentials page.
-    people_service = build(serviceName='people', version='v1', http=http)
-    results = people_service.people().connections().list(
-        resourceName='people/me',
-        pageSize=10,
-        personFields='emailAddresses,names').execute()
-    connections = results.get('connections', [])
 
     # Get inputs
     print("What's the name of the event?")
@@ -112,38 +100,54 @@ def main():
     elif r == "Thyna Meeting Room":
         room = "focus-corporation.com_@resource.calendar.google.com"
     mr = {'email': room}
-    i = 1
+
+    # Getting the Attendees
     atto = []
     noms = []
+    f = 0
+    i = 1
+    g = 0
     found = False
-    al = 0
+    found2 = False
+    # get all contacts in a list
     for person in connections:
         emailAddresses = person.get('emailAddresses', [])
         names = person.get('names', [])
         atto.append(emailAddresses[0].get('value'))
         noms.append(names[0].get('displayName'))
+    print(noms)
+    p = len(noms)
+    # Int a list of attendees and it's length is the maximum number of attendees according to the room chosen befor
     attendees = ['blabla@blabla'] * maxattendees
     # first attendee
     print('attendees :')
     a = input()
     if a != '':
-        while (al != len(noms)) & (found is False):
-            if noms[al] == a:
-                attendees[0] = a
-                al = al + 1
+        while (g != p) & (found is False):
+            # if the name in the input matches the a name in the list we add the email of that person to the attendees
+            # list which will be treated later to delete the examples 'blabla@blabla.com'
+            if noms[g] == a:
+                attendees[0] = atto[g]
+                g = g + 1
                 found = True
             else:
-                print('name not found')
+                g = g + 1
+        if found is False:
+            print('contact not found try again please')
     else:
         print('no attendees added')
-    # other attendees to add less then max
-    while i != maxattendees:
+    # other attendees to add less then max number of attendees
+    while i != max:
         a = input()
         if a == '':
             break
         else:
-            attendees[i] = a
-            i = i + 1
+            while (f != p) | (found2 is False):
+                if noms[f] == a:
+                    attendees[i] = atto[f]
+                    found2 = True
+                f = f + 1
+        i = i + 1
     # until this stage we have a list of attendees + blanks filled with blabla@blabla.om
     #print(attendees)
     l = len(attendees)
@@ -158,12 +162,19 @@ def main():
         else:
             t = t + 1
     l2 = len(att)
+    print(att)
+    #print(l2)
 
     attendee = []
     for r in range(l2):
         email = {'email': att[r]}
         attendee.append(email)
     attendee.append(mr)
+    #print(attendee)
+    #l = "FOCUS-1ere-Midoune Meeting Room (10)"
+    """Shows basic usage of the Google Calendar API.
+    Prints the start and name of the next 10 events on the user's calendar.
+    """
 
     #Add an event
     event = {

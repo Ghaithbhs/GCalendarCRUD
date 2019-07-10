@@ -38,6 +38,8 @@ http = credentials.authorize(http)
 # your application, visit the Google API Console
 # and look at your application's credentials page.
 service = build('calendar', 'v3', credentials=credentials)
+
+
 def main():
 #Call the People API
     print("What's the name of the event?")
@@ -55,8 +57,7 @@ def main():
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         print(start, event['summary'])
+
+
 if __name__ == '__main__':
     main()
-
-
-
