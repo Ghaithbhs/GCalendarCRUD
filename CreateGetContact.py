@@ -99,6 +99,7 @@ def main():
         room = "focus-corporation.com_@resource.calendar.google.com"
     elif r == "Thyna Meeting Room":
         room = "focus-corporation.com_@resource.calendar.google.com"
+
     mr = {'email': room}
 
     # Getting the Attendees
@@ -137,7 +138,7 @@ def main():
     else:
         print('no attendees added')
     # other attendees to add less then max number of attendees
-    while i != max:
+    while i != maxattendees:
         a = input()
         if a == '':
             break
