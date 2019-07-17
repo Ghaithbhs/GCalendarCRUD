@@ -81,12 +81,40 @@ def main():
                                           maxResults=1, singleEvents=True,
                                           orderBy='startTime', q=n).execute()
     events = events_result.get('items', [])
-
+    attendemail = []
+    attendname = []
+    attendstatus = []
+    confattend = []
+    i = 0
+    k = 0
+    j = 0
     if not events:
         print('event not found.')
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'], event['location'])
+        attendees = event['attendees']
+        print(attendees)
+        #print(attendees[0]['displayName'])
+        l = len(attendees)
+        while i != l:
+            attendemail.append(attendees[i]['email'])
+            attendstatus.append(attendees[i]['responseStatus'])
+            attendname.append(attendees[i].get('displayName'))
+
+            i = i+1
+        while k != l:
+            if attendname[k] is None:
+                attendname[k] = attendemail[k]
+            k = k + 1
+        while j != l:
+            if attendees[j]['responseStatus'] == 'accepted':
+                confattend.append(attendemail[j])
+            j = j + 1
+        print(attendemail)
+        print(attendname)
+        print(attendstatus)
+        print(confattend)
+        #print(start, event['summary'], event['location'], event['attendees'])
         #eventid = event['id']
         #print(event['id'])
         #print(eventid)

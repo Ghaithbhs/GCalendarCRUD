@@ -9,6 +9,7 @@ from google.auth.transport.requests import Request
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId']
 
+
 def main():
 
     # Get inputs
@@ -50,8 +51,8 @@ def main():
         print(event['id'])
         print(eventid)
 
-    service.events().delete(calendarId='primary', eventId=eventid).execute()
-
+    #service.events().delete(calendarId='primary', eventId=eventid).execute()
+    service.events().update(calendarId='primary', eventId=eventid, body=event).execute()
 
 if __name__ == '__main__':
     main()
